@@ -34,12 +34,12 @@ jobs:
           echo "ver=$ver" >> "$GITHUB_OUTPUT"
 
       # The ZIP holds the extension in a youtube-comments-below folder, with
-      # the README and LICENSE but not this workflow.
+      # the README and LICENSE but not this workflow or the store material.
       - name: Zip the extension
         run: |
           git archive --format=zip --prefix=youtube-comments-below/ \
             -o "youtube-comments-below-v${{ steps.meta.outputs.ver }}.zip" HEAD -- . \
-            ':!.github' ':!.gitignore' ':!RELEASING.md'
+            ':!.github' ':!.gitignore' ':!RELEASING.md' ':!store'
 
       - name: Create the release with the ZIP attached
         env:

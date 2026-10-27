@@ -8,3 +8,6 @@
 .idea/
 Thumbs.db
 .DS_Store
+
+# Store upload ZIPs (store/build-zip.ps1)
+dist/
