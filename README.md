@@ -23,8 +23,8 @@ The extension isn't on the Chrome Web Store, so it's loaded "unpacked":
    the extracted ZIP.
 5. Open any YouTube video and hard-reload it (Ctrl+Shift+R).
 
-There's no icon, popup, or settings page. To get the new layout back, switch
-the extension off on `chrome://extensions`.
+There's no popup or settings page. To get the new layout back, switch the
+extension off on `chrome://extensions`.
 
 If you also use uBlock Origin with the custom filters for this layout, you
 only need one of the two. They don't conflict, but there's no point running
