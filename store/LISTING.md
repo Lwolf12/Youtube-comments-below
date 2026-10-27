@@ -13,7 +13,7 @@ new package to change):
 
 > Restores the classic YouTube watch page: recommendations on the right, comments below the video.
 
-**Category:** Social & Communication (or Entertainment) · **Language:** English
+**Category:** Functionality & UI · **Language:** English
 
 **Description:**
 
