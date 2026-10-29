@@ -11,7 +11,7 @@ layout, including theater mode.
 
 ## Install
 
-The extension isn't on the Chrome Web Store, so it's loaded "unpacked":
+The extension isn't on the Chrome Web Store yet, so it's loaded "unpacked":
 
 1. Download the latest ZIP from the
    [Releases page](https://github.com/Lwolf12/Youtube-comments-below/releases)
@@ -25,6 +25,15 @@ The extension isn't on the Chrome Web Store, so it's loaded "unpacked":
 
 There's no popup or settings page. To get the new layout back, switch the
 extension off on `chrome://extensions`.
+
+### Firefox
+
+The same code runs in Firefox 140 or later. Build the Firefox ZIP with
+`store/build-zip.ps1` (it needs Node for the manifest, which
+`store/firefox-manifest.mjs` generates from Chrome's), then open
+`about:debugging`, choose **This Firefox → Load Temporary Add-on…** and pick
+`dist/youtube-comments-below-v<version>-firefox.zip`. It stays until Firefox
+is closed; the add-on listing, once it is published, installs permanently.
 
 If you also use uBlock Origin with the custom filters for this layout, you
 only need one of the two. They don't conflict, but there's no point running

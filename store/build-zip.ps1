@@ -1,15 +1,57 @@
-# Builds the Chrome Web Store upload ZIP: manifest.json at the ZIP root, the
-# extension files and icons, nothing else (no docs, workflow or store
-# material). Output: dist/youtube-comments-below-v<version>-webstore.zip
+# Builds the store upload ZIPs: manifest.json at the ZIP root (both stores
+# require that), the extension files and icons, nothing else (no docs,
+# workflow or store material). Output: dist/
+#   youtube-comments-below-v<version>-webstore.zip   Chrome Web Store
+#   youtube-comments-below-v<version>-firefox.zip    addons.mozilla.org; its
+#                                                    manifest comes from
+#                                                    firefox-manifest.mjs
+#                                                    (needs Node). Also loads
+#                                                    as a temporary add-on in
+#                                                    about:debugging.
 #
-# Uses git archive so entry names always use forward slashes; Compress-Archive
-# on Windows PowerShell 5.1 writes icons\icon128.png and the store then cannot
-# find the icons.
+# Uses ZipArchive directly rather than Compress-Archive: on Windows
+# PowerShell 5.1 Compress-Archive writes entry names with backslashes
+# (icons\icon128.png), and the stores then cannot find the icons.
 $ErrorActionPreference = 'Stop'
+Add-Type -AssemblyName System.IO.Compression
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+
 $src = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $ver = (Get-Content (Join-Path $src 'manifest.json') -Raw | ConvertFrom-Json).version
 New-Item -ItemType Directory -Force (Join-Path $src 'dist') | Out-Null
-$out = Join-Path $src "dist\youtube-comments-below-v$ver-webstore.zip"
-git -C $src archive --format=zip -o $out HEAD -- . ':!.github' ':!.gitignore' ':!README.md' ':!RELEASING.md' ':!LICENSE' ':!store'
-if ($LASTEXITCODE -ne 0) { throw 'git archive failed (commit your changes first: it packages HEAD)' }
-Write-Host "Wrote $out"
+
+$skipDirs = @('dist', 'store')
+$skipFiles = @('README.md', 'RELEASING.md', 'LICENSE')
+$skipExt = @('.zip', '.crx', '.pem', '.xpi')
+
+$firefoxManifest = (& node (Join-Path $PSScriptRoot 'firefox-manifest.mjs')) -join "`n"
+if ($LASTEXITCODE -ne 0) { throw 'firefox-manifest.mjs failed' }
+
+function Build-Zip($out, $manifestText) {
+  if (Test-Path $out) { Remove-Item $out }
+  $zip = [IO.Compression.ZipFile]::Open($out, [IO.Compression.ZipArchiveMode]::Create)
+  try {
+    # Skipped top-level folders (dist, store) and dot entries (.git, .github,
+    # .gitignore) are left out before recursing, not filtered after.
+    Get-ChildItem $src |
+      Where-Object { -not ($_.Name.StartsWith('.') -or ($_.PSIsContainer -and $_.Name -in $skipDirs)) } |
+      ForEach-Object { if ($_.PSIsContainer) { Get-ChildItem $_.FullName -Recurse -File } else { $_ } } |
+      ForEach-Object {
+      $rel = $_.FullName.Substring($src.Length + 1) -replace '\\', '/'
+      if ($rel -in $skipFiles -or $_.Extension -in $skipExt) { return }
+      if ($rel -eq 'manifest.json' -and $manifestText) {
+        $entry = $zip.CreateEntry($rel, [IO.Compression.CompressionLevel]::Optimal)
+        $w = New-Object IO.StreamWriter($entry.Open(), (New-Object Text.UTF8Encoding($false)))
+        try { $w.Write($manifestText) } finally { $w.Dispose() }
+        return
+      }
+      [IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, $_.FullName, $rel, [IO.Compression.CompressionLevel]::Optimal) | Out-Null
+    }
+  } finally {
+    $zip.Dispose()
+  }
+  Write-Host "Wrote $out"
+}
+
+Build-Zip (Join-Path $src "dist\youtube-comments-below-v$ver-webstore.zip") $null
+Build-Zip (Join-Path $src "dist\youtube-comments-below-v$ver-firefox.zip") $firefoxManifest
