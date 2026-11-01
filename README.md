@@ -11,33 +11,32 @@ layout, including theater mode.
 
 ## Install
 
-The extension isn't on the Chrome Web Store yet, so it's loaded "unpacked":
+- **Chrome:** [Chrome Web Store](https://chromewebstore.google.com/detail/comments-below-for-youtub/poejpcjlkaaanjenanjlmgfiknaehlbf)
+- **Firefox:** [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/comments-below-for-youtube/)
+  (Firefox 140 or later)
 
-1. Download the latest ZIP from the
-   [Releases page](https://github.com/Lwolf12/Youtube-comments-below/releases)
-   and extract it somewhere permanent; Chrome loads the extension from that
-   folder every time it starts.
-2. In Chrome, open `chrome://extensions`.
-3. Turn on **Developer mode** (toggle in the top right).
-4. Click **Load unpacked** and pick the `youtube-comments-below` folder from
-   the extracted ZIP.
-5. Open any YouTube video and hard-reload it (Ctrl+Shift+R).
-
-There's no popup or settings page. To get the new layout back, switch the
-extension off on `chrome://extensions`.
-
-### Firefox
-
-The same code runs in Firefox 140 or later. Build the Firefox ZIP with
-`store/build-zip.ps1` (it needs Node for the manifest, which
-`store/firefox-manifest.mjs` generates from Chrome's), then open
-`about:debugging`, choose **This Firefox → Load Temporary Add-on…** and pick
-`dist/youtube-comments-below-v<version>-firefox.zip`. It stays until Firefox
-is closed; the add-on listing, once it is published, installs permanently.
+Install from the store, then open any YouTube video and reload it. There's
+no popup or settings page. To get the new layout back, switch the extension
+off on `chrome://extensions` or in Firefox's Add-ons Manager.
 
 If you also use uBlock Origin with the custom filters for this layout, you
 only need one of the two. They don't conflict, but there's no point running
 both.
+
+### Without the store
+
+In Chrome, download the latest ZIP from the
+[Releases page](https://github.com/Lwolf12/Youtube-comments-below/releases),
+extract it somewhere permanent, open `chrome://extensions`, turn on
+**Developer mode** and click **Load unpacked** on the
+`youtube-comments-below` folder. Chrome loads the extension from that folder
+every time it starts.
+
+In Firefox, build the Firefox ZIP with `store/build-zip.ps1` (it needs Node
+for the manifest, which `store/firefox-manifest.mjs` generates from
+Chrome's), then open `about:debugging`, choose **This Firefox → Load
+Temporary Add-on…** and pick `dist/youtube-comments-below-v<version>-firefox.zip`.
+It stays until Firefox is closed.
 
 ## How it works
 
