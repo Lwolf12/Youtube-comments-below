@@ -66,7 +66,7 @@ Size a Chrome window to 1280×800 (DevTools → device toolbar → Responsive �
 1280×800 and take the capture from there, or Win+Shift+S and crop) and avoid
 anything personal in the frame (account avatar, history, subscriptions).
 
-**Small promo tile** (440×280, optional): skip for the first submission.
+**Small promo tile** (440×280, optional): `store/promo-tile-small.png`. Needed for the extension to appear in collections and category pages.
 
 **Official URL / Homepage:** https://github.com/Lwolf12/Youtube-comments-below
 **Support URL:** https://github.com/Lwolf12/Youtube-comments-below/issues
